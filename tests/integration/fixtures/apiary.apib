@@ -1,0 +1,1331 @@
+FORMAT: 1A
+HOST: https://api.apiblueprint.org
+
+# API Blueprint API
+API Blueprint parsing service provides parsing of API Blueprint "as a service".
+
+## Media Types
+The API uses [content negotiation](https://en.wikipedia.org/wiki/Content_negotiation) heavily. Send requests with the `Content-Type` header set to the right input media type and use the `Accept` header to select desired output as a response.
+
+### Resource State Representation
+
+```
+application/hal+json
+```
+
+Where applicable this API uses the [HAL+JSON](https://github.com/mikekelly/hal_specification/blob/master/hal_specification.md) media type to represent resource states and to provide available affordances.
+
+### Error States
+The common [HTTP Response Status Codes](https://github.com/for-GET/know-your-http-well/blob/master/status-codes.md) are used. Error responses use the [vnd.error](https://github.com/blongden/vnd.error) media type.
+
+## Service Root [/]
+API entry point.
+
+This resource does not have any attributes, instead it provides list of available affordances.
+
+### Affordances
+- `parse` - Parse an API description
+
+    See _API Description Parser_ resource's _Parser_ action for details.
+
+- `compose` - Composes an API description
+
+    See _API Description Composer_ resource's _Compose_ action for details.
+
+### List [GET]
+
++ Relation: index
+
++ Response 200 (application/hal+json)
+    + Headers
+
+            Link: <http://docs.apiblueprint.apiary.io>; rel="profile"
+
+    + Body
+
+            {
+                "_links": {
+                    "self": {"href": "/"},
+                    "parse": {"href": "/parser"},
+                    "compose": {"href": "/composer"}
+                }
+            }
+
+## API Description Parser [/parser]
+Parse an API description format.
+
+### Parse [POST]
+API Blueprint parsing is performed as it is provided by the [Drafter](https://github.com/apiaryio/drafter) reference parser.
+
+#### Input Media Types
+
+##### API Blueprint
+
+```
+text/vnd.apiblueprint
+```
+
+API Blueprint as defined in its [specification](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
+
+##### Swagger 2.0
+
+```
+application/swagger+yaml
+application/swagger+json
+```
+
+Swagger as defined in its [specification](http://swagger.io/specification)
+
+#### Output Media Types
+
+##### API Description Parse Result Namespace
+
+```
+application/vnd.refract.parse-result+json
+application/vnd.refract.parse-result+yaml
+```
+
+General-purpose result of the parsing operation. The parse result is in form of the Refract data structure as defined in its [specification](https://github.com/refractproject/refract-spec). The parse result data comply with the [Parse Result Namespace](https://github.com/refractproject/refract-spec/blob/master/namespaces/parse-result-namespace.md).
+
++ Relation: parse
+
++ Request Parse API Blueprint into Parse Result Namespace as JSON (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+json
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 200 (application/vnd.refract.parse-result+json)
+
+        {
+          "element": "parseResult",
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": [
+                  "api"
+                ],
+                "title": "Hello API"
+              },
+              "content": [
+                {
+                  "element": "category",
+                  "meta": {
+                    "classes": [
+                      "resourceGroup"
+                    ],
+                    "title": ""
+                  },
+                  "content": [
+                    {
+                      "element": "resource",
+                      "meta": {
+                        "title": ""
+                      },
+                      "attributes": {
+                        "href": "/message"
+                      },
+                      "content": [
+                        {
+                          "element": "transition",
+                          "meta": {
+                            "title": ""
+                          },
+                          "content": [
+                            {
+                              "element": "httpTransaction",
+                              "content": [
+                                {
+                                  "element": "httpRequest",
+                                  "attributes": {
+                                    "method": "GET"
+                                  },
+                                  "content": []
+                                },
+                                {
+                                  "element": "httpResponse",
+                                  "attributes": {
+                                    "statusCode": "200",
+                                    "headers": {
+                                      "element": "httpHeaders",
+                                      "content": [
+                                        {
+                                          "element": "member",
+                                          "content": {
+                                            "key": {
+                                              "element": "string",
+                                              "content": "Content-Type"
+                                            },
+                                            "value": {
+                                              "element": "string",
+                                              "content": "text/plain"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "content": [
+                                    {
+                                      "element": "asset",
+                                      "meta": {
+                                        "classes": [
+                                          "messageBody"
+                                        ]
+                                      },
+                                      "attributes": {
+                                        "contentType": "text/plain"
+                                      },
+                                      "content": "Hello World!\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Request Parse API Blueprint into Parse Result Namespace as YAML (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+yaml
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 200 (application/vnd.refract.parse-result+yaml)
+
+        element: parseResult
+        content:
+          - element: category
+            meta:
+              classes:
+                - api
+              title: Hello API
+            content:
+              - element: category
+                meta:
+                  classes:
+                    - resourceGroup
+                  title: ''
+                content:
+                  - element: resource
+                    meta:
+                      title: ''
+                    attributes:
+                      href: /message
+                    content:
+                      - element: transition
+                        meta:
+                          title: ''
+                        content:
+                          - element: httpTransaction
+                            content:
+                              - element: httpRequest
+                                attributes:
+                                  method: GET
+                                content: []
+                              - element: httpResponse
+                                attributes:
+                                  statusCode: '200'
+                                  headers:
+                                    element: httpHeaders
+                                    content:
+                                      - element: member
+                                        content:
+                                          key:
+                                            element: string
+                                            content: Content-Type
+                                          value:
+                                            element: string
+                                            content: text/plain
+                                content:
+                                  - element: asset
+                                    meta:
+                                      classes:
+                                        - messageBody
+                                    attributes:
+                                      contentType: text/plain
+                                    content: |
+                                      Hello World!
+
++ Request Parse API Blueprint into Parse Result Namespace as JSON 1.0 (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+json; version=1.0
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 200 (application/vnd.refract.parse-result+json; version=1.0)
+
+        {
+          "element": "parseResult",
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": {
+                  "element": "array",
+                  "content": [
+                    {
+                      "element": "string",
+                      "content": "api"
+                    }
+                  ]
+                },
+                "title": {
+                  "element": "string",
+                  "content": "Hello API"
+                }
+              },
+              "content": [
+                {
+                  "element": "category",
+                  "meta": {
+                    "classes": {
+                      "element": "array",
+                      "content": [
+                        {
+                          "element": "string",
+                          "content": "resourceGroup"
+                        }
+                      ]
+                    },
+                    "title": {
+                      "element": "string",
+                      "content": ""
+                    }
+                  },
+                  "content": [
+                    {
+                      "element": "resource",
+                      "meta": {
+                        "title": {
+                          "element": "string",
+                          "content": ""
+                        }
+                      },
+                      "attributes": {
+                        "href": {
+                          "element": "string",
+                          "content": "/message"
+                        }
+                      },
+                      "content": [
+                        {
+                          "element": "transition",
+                          "meta": {
+                            "title": {
+                              "element": "string",
+                              "content": ""
+                            }
+                          },
+                          "content": [
+                            {
+                              "element": "httpTransaction",
+                              "content": [
+                                {
+                                  "element": "httpRequest",
+                                  "attributes": {
+                                    "method": {
+                                      "element": "string",
+                                      "content": "GET"
+                                    }
+                                  }
+                                },
+                                {
+                                  "element": "httpResponse",
+                                  "attributes": {
+                                    "statusCode": {
+                                      "element": "string",
+                                      "content": "200"
+                                    },
+                                    "headers": {
+                                      "element": "httpHeaders",
+                                      "content": [
+                                        {
+                                          "element": "member",
+                                          "content": {
+                                            "key": {
+                                              "element": "string",
+                                              "content": "Content-Type"
+                                            },
+                                            "value": {
+                                              "element": "string",
+                                              "content": "text/plain"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "content": [
+                                    {
+                                      "element": "asset",
+                                      "meta": {
+                                        "classes": {
+                                          "element": "array",
+                                          "content": [
+                                            {
+                                              "element": "string",
+                                              "content": "messageBody"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "attributes": {
+                                        "contentType": {
+                                          "element": "string",
+                                          "content": "text/plain"
+                                        }
+                                      },
+                                      "content": "Hello World!\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Request Parse API Blueprint into Parse Result Namespace as YAML 1.0 (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+yaml; version=1.0
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 200 (application/vnd.refract.parse-result+yaml; version=1.0)
+
+        element: parseResult
+        content:
+          - element: category
+            meta:
+              classes:
+                element: array
+                content:
+                  - element: string
+                    content: api
+              title:
+                element: string
+                content: Hello API
+            content:
+              - element: category
+                meta:
+                  classes:
+                    element: array
+                    content:
+                      - element: string
+                        content: resourceGroup
+                  title:
+                    element: string
+                    content: ''
+                content:
+                  - element: resource
+                    meta:
+                      title:
+                        element: string
+                        content: ''
+                    attributes:
+                      href:
+                        element: string
+                        content: /message
+                    content:
+                      - element: transition
+                        meta:
+                          title:
+                            element: string
+                            content: ''
+                        content:
+                          - element: httpTransaction
+                            content:
+                              - element: httpRequest
+                                attributes:
+                                  method:
+                                    element: string
+                                    content: GET
+                              - element: httpResponse
+                                attributes:
+                                  statusCode:
+                                    element: string
+                                    content: '200'
+                                  headers:
+                                    element: httpHeaders
+                                    content:
+                                      - element: member
+                                        content:
+                                          key:
+                                            element: string
+                                            content: Content-Type
+                                          value:
+                                            element: string
+                                            content: text/plain
+                                content:
+                                  - element: asset
+                                    meta:
+                                      classes:
+                                        element: array
+                                        content:
+                                          - element: string
+                                            content: messageBody
+                                    attributes:
+                                      contentType:
+                                        element: string
+                                        content: text/plain
+                                    content: |
+                                      Hello World!
+
++ Request Parse API Blueprint into Parse Result Namespace as JSON 0.6 (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+json; version=0.6
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 200 (application/vnd.refract.parse-result+json; version=0.6)
+
+        {
+          "element": "parseResult",
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": [
+                  "api"
+                ],
+                "title": "Hello API"
+              },
+              "content": [
+                {
+                  "element": "category",
+                  "meta": {
+                    "classes": [
+                      "resourceGroup"
+                    ],
+                    "title": ""
+                  },
+                  "content": [
+                    {
+                      "element": "resource",
+                      "meta": {
+                        "title": ""
+                      },
+                      "attributes": {
+                        "href": "/message"
+                      },
+                      "content": [
+                        {
+                          "element": "transition",
+                          "meta": {
+                            "title": ""
+                          },
+                          "content": [
+                            {
+                              "element": "httpTransaction",
+                              "content": [
+                                {
+                                  "element": "httpRequest",
+                                  "attributes": {
+                                    "method": "GET"
+                                  },
+                                  "content": []
+                                },
+                                {
+                                  "element": "httpResponse",
+                                  "attributes": {
+                                    "statusCode": "200",
+                                    "headers": {
+                                      "element": "httpHeaders",
+                                      "content": [
+                                        {
+                                          "element": "member",
+                                          "content": {
+                                            "key": {
+                                              "element": "string",
+                                              "content": "Content-Type"
+                                            },
+                                            "value": {
+                                              "element": "string",
+                                              "content": "text/plain"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "content": [
+                                    {
+                                      "element": "asset",
+                                      "meta": {
+                                        "classes": [
+                                          "messageBody"
+                                        ]
+                                      },
+                                      "attributes": {
+                                        "contentType": "text/plain"
+                                      },
+                                      "content": "Hello World!\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Request Parse API Blueprint into Parse Result Namespace as YAML 0.6 (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+yaml; version=0.6
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 200 (application/vnd.refract.parse-result+yaml; version=0.6)
+
+        element: parseResult
+        content:
+          - element: category
+            meta:
+              classes:
+                - api
+              title: Hello API
+            content:
+              - element: category
+                meta:
+                  classes:
+                    - resourceGroup
+                  title: ''
+                content:
+                  - element: resource
+                    meta:
+                      title: ''
+                    attributes:
+                      href: /message
+                    content:
+                      - element: transition
+                        meta:
+                          title: ''
+                        content:
+                          - element: httpTransaction
+                            content:
+                              - element: httpRequest
+                                attributes:
+                                  method: GET
+                                content: []
+                              - element: httpResponse
+                                attributes:
+                                  statusCode: '200'
+                                  headers:
+                                    element: httpHeaders
+                                    content:
+                                      - element: member
+                                        content:
+                                          key:
+                                            element: string
+                                            content: Content-Type
+                                          value:
+                                            element: string
+                                            content: text/plain
+                                content:
+                                  - element: asset
+                                    meta:
+                                      classes:
+                                        - messageBody
+                                    attributes:
+                                      contentType: text/plain
+                                    content: |
+                                      Hello World!
+
++ Request Invalid Document (text/vnd.apiblueprint)
+
+    + Headers
+
+            Accept: application/vnd.refract.parse-result+yaml
+
+    + Body
+
+            FORMAT: 1A
+
+            # Hello
+
+            # Data Structures
+            ## A (A)
+
++ Response 422 (application/vnd.refract.parse-result+yaml)
+
+        element: parseResult
+        content:
+          - element: annotation
+            meta:
+              classes:
+                - error
+            attributes:
+              code: 4
+              sourceMap:
+                - element: sourceMap
+                  content:
+                    - - 39
+                      - 9
+            content: base type 'A' circularly referencing itself
+
++ Request Unsupported Input Media Type
+
+    + Headers
+
+            Content-Type: application/raml+yaml
+
+    + Body
+
+            # Hello API
+            ## /message
+            ### GET
+            + Response 200 (text/plain)
+
+                    Hello World!
+
++ Response 415 (application/vnd.error+json)
+
+        {
+          "message": "Content-Type \"undefined\" is not supported. Supported MIME types: text/vnd.apiblueprint, text/vnd.legacyblueprint, application/swagger"
+        }
+
++ Request Unsupported Output Media Type (application/swagger+yaml)
+
+    + Headers
+
+            Accept: application/vnd.apiblueprint.parseresult+json; version=2.2
+
+    + Body
+
+            swagger: '2.0'
+            info:
+              title: Swagger
+              version: '2.0'
+            paths:
+              '/test':
+                get:
+                  summary: Test get
+                  description: Test description
+                  responses:
+                    204:
+                      description: Test response
+
++ Response 406 (application/vnd.error+json)
+
+        {
+          "message": "None of requested Content-Types \"application/vnd.apiblueprint.parseresult+json; version=2.2\" is supported. Supported MIME types: application/vnd.refract.parse-result, application/vnd.refract.parse-result; version=0.6, application/vnd.refract.parse-result; version=1.0, application/vnd.refract.parse-result+json, application/vnd.refract.parse-result+json; version=0.6, application/vnd.refract.parse-result+json; version=1.0, application/vnd.refract.parse-result+yaml, application/vnd.refract.parse-result+yaml; version=0.6, application/vnd.refract.parse-result+yaml; version=1.0"
+        }
+
+## API Description Composer [/composer]
+Reverse the parsing process--compose an API description format.
+
+### Compose [POST]
+
+#### Input Media Types
+
+##### API Elements
+
+API Elements is supported, you can send an [API Elements API
+Category](http://api-elements.readthedocs.io/en/latest/element-definitions/#category-base-api-element)
+to the composer using the `application/vnd.refract+json` content type. You may
+also send an [API Elements Parse
+Result](http://api-elements.readthedocs.io/en/latest/element-definitions/#parse-result-elements)
+as `application/vnd.refract.parse-result+json`.
+
+```
+application/vnd.refract+json
+application/vnd.refract.parse-result+json
+```
+
+#### Output Media Types
+
+##### API Blueprint
+
+```
+text/vnd.apiblueprint
+```
+
+API Blueprint as defined in its [specification](https://github.com/apiaryio/api-blueprint/blob/master/API%20Blueprint%20Specification.md).
+
++ Relation: compose
+
++ Request Compose API Blueprint from API Elements API (application/vnd.refract+json)
+
+        {
+          "element": "category",
+          "meta": {
+            "classes": [
+              "api"
+            ],
+            "title": "Hello API"
+          },
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": [
+                  "resourceGroup"
+                ],
+                "title": ""
+              },
+              "content": [
+                {
+                  "element": "resource",
+                  "meta": {
+                    "title": ""
+                  },
+                  "attributes": {
+                    "href": "/message"
+                  },
+                  "content": [
+                    {
+                      "element": "transition",
+                      "meta": {
+                        "title": ""
+                      },
+                      "content": [
+                        {
+                          "element": "httpTransaction",
+                          "content": [
+                            {
+                              "element": "httpRequest",
+                              "attributes": {
+                                "method": "GET"
+                              },
+                              "content": []
+                            },
+                            {
+                              "element": "httpResponse",
+                              "attributes": {
+                                "statusCode": "200",
+                                "headers": {
+                                  "element": "httpHeaders",
+                                  "content": [
+                                    {
+                                      "element": "member",
+                                      "content": {
+                                        "key": {
+                                          "element": "string",
+                                          "content": "Content-Type"
+                                        },
+                                        "value": {
+                                          "element": "string",
+                                          "content": "text/plain"
+                                        }
+                                      }
+                                    }
+                                  ]
+                                }
+                              },
+                              "content": [
+                                {
+                                  "element": "asset",
+                                  "meta": {
+                                    "classes": [
+                                      "messageBody"
+                                    ]
+                                  },
+                                  "attributes": {
+                                    "contentType": "text/plain"
+                                  },
+                                  "content": "Hello World!\n"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Response 200 (text/vnd.apiblueprint)
+
+        FORMAT: 1A
+
+        # Hello API
+
+        ### /message
+
+        #### GET
+
+        + Response 200 (text/plain)
+
+                Hello World!
+
+
++ Request Compose API Blueprint from API Elements Parse Result (application/vnd.refract.parse-result+json)
+
+        {
+          "element": "parseResult",
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": [
+                  "api"
+                ],
+                "title": "Hello API"
+              },
+              "content": [
+                {
+                  "element": "category",
+                  "meta": {
+                    "classes": [
+                      "resourceGroup"
+                    ],
+                    "title": ""
+                  },
+                  "content": [
+                    {
+                      "element": "resource",
+                      "meta": {
+                        "title": ""
+                      },
+                      "attributes": {
+                        "href": "/message"
+                      },
+                      "content": [
+                        {
+                          "element": "transition",
+                          "meta": {
+                            "title": ""
+                          },
+                          "content": [
+                            {
+                              "element": "httpTransaction",
+                              "content": [
+                                {
+                                  "element": "httpRequest",
+                                  "attributes": {
+                                    "method": "GET"
+                                  },
+                                  "content": []
+                                },
+                                {
+                                  "element": "httpResponse",
+                                  "attributes": {
+                                    "statusCode": "200",
+                                    "headers": {
+                                      "element": "httpHeaders",
+                                      "content": [
+                                        {
+                                          "element": "member",
+                                          "content": {
+                                            "key": {
+                                              "element": "string",
+                                              "content": "Content-Type"
+                                            },
+                                            "value": {
+                                              "element": "string",
+                                              "content": "text/plain"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "content": [
+                                    {
+                                      "element": "asset",
+                                      "meta": {
+                                        "classes": [
+                                          "messageBody"
+                                        ]
+                                      },
+                                      "attributes": {
+                                        "contentType": "text/plain"
+                                      },
+                                      "content": "Hello World!\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Response 200 (text/vnd.apiblueprint)
+
+        FORMAT: 1A
+
+        # Hello API
+
+        ### /message
+
+        #### GET
+
+        + Response 200 (text/plain)
+
+                Hello World!
+
+
++ Request Compose API Blueprint from API Elements 1.0 Parse Result (application/vnd.refract.parse-result+json; version=1.0)
+
+        {
+          "element": "parseResult",
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": {
+                  "element": "array",
+                  "content": [
+                    {
+                      "element": "string",
+                      "content": "api"
+                    }
+                  ]
+                },
+                "title": {
+                  "element": "string",
+                  "content": "Hello API"
+                }
+              },
+              "content": [
+                {
+                  "element": "category",
+                  "meta": {
+                    "classes": {
+                      "element": "array",
+                      "content": [
+                        {
+                          "element": "string",
+                          "content": "resourceGroup"
+                        }
+                      ]
+                    },
+                    "title": {
+                      "element": "string",
+                      "content": ""
+                    }
+                  },
+                  "content": [
+                    {
+                      "element": "resource",
+                      "meta": {
+                        "title": {
+                          "element": "string",
+                          "content": ""
+                        }
+                      },
+                      "attributes": {
+                        "href": {
+                          "element": "string",
+                          "content": "/message"
+                        }
+                      },
+                      "content": [
+                        {
+                          "element": "transition",
+                          "meta": {
+                            "title": {
+                              "element": "string",
+                              "content": ""
+                            }
+                          },
+                          "content": [
+                            {
+                              "element": "httpTransaction",
+                              "content": [
+                                {
+                                  "element": "httpRequest",
+                                  "attributes": {
+                                    "method": {
+                                      "element": "string",
+                                      "content": "GET"
+                                    }
+                                  }
+                                },
+                                {
+                                  "element": "httpResponse",
+                                  "attributes": {
+                                    "statusCode": {
+                                      "element": "string",
+                                      "content": "200"
+                                    },
+                                    "headers": {
+                                      "element": "httpHeaders",
+                                      "content": [
+                                        {
+                                          "element": "member",
+                                          "content": {
+                                            "key": {
+                                              "element": "string",
+                                              "content": "Content-Type"
+                                            },
+                                            "value": {
+                                              "element": "string",
+                                              "content": "text/plain"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "content": [
+                                    {
+                                      "element": "asset",
+                                      "meta": {
+                                        "classes": {
+                                          "element": "array",
+                                          "content": [
+                                            {
+                                              "element": "string",
+                                              "content": "messageBody"
+                                            }
+                                          ]
+                                        }
+                                      },
+                                      "attributes": {
+                                        "contentType": {
+                                          "element": "string",
+                                          "content": "text/plain"
+                                        }
+                                      },
+                                      "content": "Hello World!\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Response 200 (text/vnd.apiblueprint)
+
+        FORMAT: 1A
+
+        # Hello API
+
+        ### /message
+
+        #### GET
+
+        + Response 200 (text/plain)
+
+                Hello World!
+
+
++ Request Compose API Blueprint from API Elements 0.6 Parse Result (application/vnd.refract.parse-result+json; version=0.6)
+
+        {
+          "element": "parseResult",
+          "content": [
+            {
+              "element": "category",
+              "meta": {
+                "classes": [
+                  "api"
+                ],
+                "title": "Hello API"
+              },
+              "content": [
+                {
+                  "element": "category",
+                  "meta": {
+                    "classes": [
+                      "resourceGroup"
+                    ],
+                    "title": ""
+                  },
+                  "content": [
+                    {
+                      "element": "resource",
+                      "meta": {
+                        "title": ""
+                      },
+                      "attributes": {
+                        "href": "/message"
+                      },
+                      "content": [
+                        {
+                          "element": "transition",
+                          "meta": {
+                            "title": ""
+                          },
+                          "content": [
+                            {
+                              "element": "httpTransaction",
+                              "content": [
+                                {
+                                  "element": "httpRequest",
+                                  "attributes": {
+                                    "method": "GET"
+                                  },
+                                  "content": []
+                                },
+                                {
+                                  "element": "httpResponse",
+                                  "attributes": {
+                                    "statusCode": "200",
+                                    "headers": {
+                                      "element": "httpHeaders",
+                                      "content": [
+                                        {
+                                          "element": "member",
+                                          "content": {
+                                            "key": {
+                                              "element": "string",
+                                              "content": "Content-Type"
+                                            },
+                                            "value": {
+                                              "element": "string",
+                                              "content": "text/plain"
+                                            }
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  },
+                                  "content": [
+                                    {
+                                      "element": "asset",
+                                      "meta": {
+                                        "classes": [
+                                          "messageBody"
+                                        ]
+                                      },
+                                      "attributes": {
+                                        "contentType": "text/plain"
+                                      },
+                                      "content": "Hello World!\n"
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+
++ Response 200 (text/vnd.apiblueprint)
+
+        FORMAT: 1A
+
+        # Hello API
+
+        ### /message
+
+        #### GET
+
+        + Response 200 (text/plain)
+
+                Hello World!
+
+
++ Request Unknown Refract Version (application/vnd.refract.parse-result+json; version=2.0)
+
+        {}
+
++ Response 415 (application/vnd.error+json)
+    + Attributes
+        + message: ``Unsupported Refract Serialisation version `2.0`. Supported: 0.6, 1.0.``
+
++ Request Unknown Content Type (application/vnd.apiblueprint.ast+json)
+
+        {}
+
++ Response 415 (application/vnd.error+json)
+    + Attributes
+        + message: ``Unsupported Content-Type `application/vnd.apiblueprint.ast+json`. Supported: application/vnd.refract+json, application/vnd.refract.parse-result+json. API Blueprint AST is no longer supported.``

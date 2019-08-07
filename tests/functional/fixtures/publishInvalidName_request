@@ -1,0 +1,10 @@
+O:15:"Httpful\Request":22:{s:3:"uri";s:48:"https://api.apiary.io/blueprint/publish/utCreate";s:6:"method";s:4:"POST";s:7:"headers";a:3:{s:12:"Content-Type";s:31:"application/json; charset=utf-8";s:14:"Authentication";s:38:"Token 4639959a286a8e3569250827f873eb76";s:14:"Content-Length";i:35;}s:11:"raw_headers";s:400:"POST /blueprint/publish/utCreate HTTP/1.1
+Host: api.apiary.io
+Expect:
+User-Agent: Httpful/0.2.20 (cURL/7.52.1 PHP/7.3.8-1+0~20190807.43+debian9~1.gbp7731bf (Linux))
+Content-Type: application/x-www-form-urlencoded
+Accept: */*; q=0.5, text/plain; q=0.8, text/html;level=3;
+Content-Type: application/json; charset=utf-8
+Authentication: Token 4639959a286a8e3569250827f873eb76
+Content-Length: 35
+";s:10:"strict_ssl";b:0;s:12:"content_type";s:33:"application/x-www-form-urlencoded";s:13:"expected_type";N;s:20:"additional_curl_opts";a:1:{i:19913;s:4:"TRUE";}s:10:"auto_parse";b:1;s:24:"serialize_payload_method";i:2;s:8:"username";N;s:8:"password";N;s:18:"serialized_payload";s:35:"code=FORMAT%3A+1A%0A%23+utCreate%0A";s:7:"payload";s:35:"code=FORMAT%3A+1A%0A%23+utCreate%0A";s:14:"parse_callback";N;s:14:"error_callback";N;s:13:"send_callback";N;s:16:"follow_redirects";b:0;s:13:"max_redirects";i:25;s:19:"payload_serializers";a:0:{}s:3:"_ch";i:0;s:6:"_debug";N;}

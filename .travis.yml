@@ -1,0 +1,43 @@
+sudo: false
+language: php
+
+php:
+  - 7.2
+
+install:
+  - travis_retry composer self-update
+  - travis_retry composer update --no-interaction
+
+after_success:
+  - travis_retry php vendor/bin/phpcov merge --clover build/logs/clover.xml build/cov
+  - travis_retry php vendor/bin/php-coveralls -r "" -v
+
+before_script:
+  - travis_retry mkdir -p build/cov/ build/logs/
+
+script:
+  - vendor/bin/phpunit --coverage-php build/cov/coverage-${component_name}.cov --whitelist src --bootstrap vendor/autoload.php tests/$SUITE/
+
+env:
+  - SUITE=functional
+  - SUITE=unit
+  - SUITE=integration
+  - SUITE=cli
+
+matrix:
+  exclude:
+    - php: 7.2
+      env: SUITE=integration
+    - php: 7.2
+      env: SUITE=cli
+
+#allow_failures:
+#    - php: 7.2
+#      env: SUITE=integration SUITE=cli
+
+git:
+  depth: 5
+
+cache:
+  directories:
+    - $HOME/.composer/cache
