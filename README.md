@@ -66,11 +66,17 @@ $response = $client->listApis();
 
 - This code is maintained in KISS principle, but allways keep in mind, that you
   should write testable and readable code as much as possible and confortable.
-
 - The first reason for the KISS (until realy need more) principle is that
   I don't like to write more complex code and more lines only because
   of it may or may not be needed in the future.
-
 - Second point of view is that this tool should be kept as simple as possible,
   so more developers will be able to fork it, hack it to their needs and possible
   send an pull request with some new functioanlity.
+
+### TODO:
+
+- CLI tests against apiary mock
+- Integration tests against apiary mock
+- Better exceptions and error handling
+- implement use of some (preferable symphony/logger) would be nice for easier file
+  logging capabilities
