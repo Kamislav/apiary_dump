@@ -16,7 +16,7 @@ before_script:
   - travis_retry mkdir -p build/cov/ build/logs/
 
 script:
-  - vendor/bin/phpunit --coverage-php build/cov/coverage-${component_name}.cov --whitelist src --bootstrap vendor/autoload.php tests/$SUITE/
+  - vendor/bin/phpunit --coverage-php build/cov/coverage-${SUITE}-${component_name}.cov --whitelist src --bootstrap vendor/autoload.php tests/${SUITE}/
 
 env:
   - SUITE=functional
