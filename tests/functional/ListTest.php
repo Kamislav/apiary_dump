@@ -12,6 +12,7 @@ final class ListTest extends BaseTestClass
     $mock = $this->requestMock;
     $mock->shouldReceive("init")->andReturn($mock)->once()
       ->shouldReceive("addHeader")->with("")->andReturn($mock)->once()
+      ->shouldReceive("strictSSL")->with(true)->andReturn($mock)->once()
       ->shouldReceive("uri")->with("https://api.apiary.io/me/apis")->andReturn($mock)->once()
       ->shouldReceive("send")->andReturn($response);
     ;

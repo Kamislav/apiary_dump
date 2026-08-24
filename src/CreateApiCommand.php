@@ -45,7 +45,7 @@ class CreateApiCommand extends ApiaryCommand
       parent::addOptionalArguments();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
       // parse arguments
       $token = $input->getArgument('token');
@@ -61,5 +61,7 @@ class CreateApiCommand extends ApiaryCommand
       $response = $cli->createApiProject($jsonParams);
       //var_dump($response);
       $output->writeln($cli->parseResponse($response));
+
+      return 0;
     }
 }

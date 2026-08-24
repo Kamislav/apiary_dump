@@ -48,7 +48,7 @@ class GetApiCodeCommand extends ApiaryCommand
       . 'string of api subdomains to fetch.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
       $token = $input->getArgument('token');
       $cli = new ApiaryDocClient($token);
@@ -61,7 +61,8 @@ class GetApiCodeCommand extends ApiaryCommand
           $result = file_put_contents($filename, $blueprint);
           if ($result === FALSE) {
             $output->writeln('File ' . $apiSubdo . '.code NOT written, something went wrong!');
-            break;
+
+            return 1;
           }
           $output->writeln("### subdomain # " . $apiSubdo . " ### written to file");
         }
@@ -72,5 +73,7 @@ class GetApiCodeCommand extends ApiaryCommand
           $output->writeln($blueprint);
         }
       }
+
+      return 0;
     }
 }

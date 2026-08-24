@@ -292,6 +292,7 @@ protected function isJsResponse($response) {
       $request = $this->request;
     }
     $request->addHeader("Content-Type", "application/json; charset=utf-8");
+    $request->strictSSL(true);
     $request->additional_curl_opts = [
       CURLOPT_RETURNTRANSFER => "TRUE",
     ];

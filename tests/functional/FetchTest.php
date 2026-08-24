@@ -12,6 +12,7 @@ final class FetchTest extends BaseTestClass
     $mock = $this->requestMock;
     $mock->shouldReceive("init")->andReturn($mock)
     ->shouldReceive("addHeader")->with('Content-Type', 'application/json; charset=utf-8')->once()
+      ->shouldReceive("strictSSL")->with(true)->andReturn($mock)->once()
     ->shouldReceive("addHeader")->with('Authentication', 'Token ' . $token)->once()
     ->shouldReceive("uri")->with("https://api.apiary.io/blueprint/get/" . $name)->andReturn($mock)->once()
     ->shouldReceive("method")->with("GET")->andReturn($mock)->once()

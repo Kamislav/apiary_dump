@@ -3,8 +3,8 @@
     "description": "Tool for geting API documentation stored in Apiary.",
     "type": "project",
     "require": {
-        "nategood/httpful": "*",
-        "symfony/console": "^3.4"
+        "nategood/httpful": "^0.2.20",
+        "symfony/console": "^5.4"
     },
     "license": "MIT",
     "authors": [
@@ -15,9 +15,18 @@
     ],
     "bin-dir": "vendor/bin/",
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "mockery/mockery": "*",
-        "php-coveralls/php-coveralls": "^2.1",
-        "phpunit/phpcov": "^5.0"
+        "phpunit/phpunit": "^9.6.33",
+        "mockery/mockery": "^1.6.12",
+        "php-coveralls/php-coveralls": "^2.7",
+        "phpunit/phpcov": "^8.2"
+    },
+    "config": {
+        "policy": {
+            "advisories": {
+                "ignore-id": {
+                    "PKSA-4dtf-ym9h-t41j": "httpful does not verify TLS certificates by default; ApiaryDocClient enables strictSSL(true) on every request, so the advisory does not apply to this project's usage."
+                }
+            }
+        }
     }
 }
