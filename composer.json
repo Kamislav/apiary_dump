@@ -21,6 +21,11 @@
         "phpunit/phpcov": "^8.2"
     },
     "config": {
+        "audit": {
+            "ignore": {
+                "PKSA-4dtf-ym9h-t41j": "httpful does not verify TLS certificates by default; ApiaryDocClient enables strictSSL(true) on every request, so the advisory does not apply to this project's usage."
+            }
+        },
         "policy": {
             "advisories": {
                 "ignore-id": {
