@@ -30,7 +30,7 @@ class ListTeamApisCommand extends ApiaryCommand
       $this->addArgument('teamId', InputArgument::REQUIRED, 'Team ID.');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
       $token = $input->getArgument('token');
       $cli = new ApiaryDocClient($token);
@@ -46,5 +46,7 @@ class ListTeamApisCommand extends ApiaryCommand
           $apiSubdomains[] = $api->apiSubdomain;
         }
       }
+
+      return 0;
   }
 }

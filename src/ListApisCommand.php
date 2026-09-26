@@ -23,7 +23,7 @@ class ListApisCommand extends ApiaryCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
       $token = $input->getArgument('token');
 
@@ -40,5 +40,7 @@ class ListApisCommand extends ApiaryCommand
           $apiSubdomains[] = $api->apiSubdomain;
         }
       }
+
+      return 0;
     }
 }

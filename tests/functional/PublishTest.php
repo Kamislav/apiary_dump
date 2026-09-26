@@ -23,6 +23,7 @@ protected $defaultParameretsArray = [];
     $mock = $this->requestMock;
     $mock->shouldReceive("init")->andReturn($mock)
       ->shouldReceive("addHeader")->with("Content-Type", "application/json; charset=utf-8")->once()
+      ->shouldReceive("strictSSL")->with(true)->andReturn($mock)->once()
       ->shouldReceive("addHeader")->with("Authentication", "Token " . $token)->once()
       ->shouldReceive("uri")->with("https://api.apiary.io/blueprint/publish/utCreate")->andReturn($mock)->once()
       ->shouldReceive("method")->with(Http::POST)->andReturn($mock)->once()

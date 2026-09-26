@@ -39,7 +39,7 @@ class PublishApiCommand extends ApiaryCommand
       ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
       // parse arguments
       $token = $input->getArgument('token');
@@ -62,5 +62,7 @@ class PublishApiCommand extends ApiaryCommand
       if (! is_array($response)) {
         $output->writeln($response);
       }
+
+      return 0;
     }
 }

@@ -13,9 +13,9 @@ It is written in PHP, so you can use the base class ApiaryDocClient() directly
 ## Requirements
 
 ### required
-- PHP > 5.0
+- PHP >= 7.2.5
 - nategood/httpful PHP REST client library
-- symphony/console PHP framework Component
+- symphony/console PHP framework Component (^5.4)
 - Apiary token
 
 ### optional
