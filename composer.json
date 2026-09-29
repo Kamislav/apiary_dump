@@ -4,7 +4,7 @@
     "type": "project",
     "require": {
         "nategood/httpful": "^0.2.20",
-        "symfony/console": "^5.4"
+        "symfony/console": "^8.1"
     },
     "license": "MIT",
     "authors": [
